@@ -13,6 +13,8 @@ gemspec
 # To use debugger
 # gem 'debugger'
 
+  gem 'sanitize'
+
 group :development do
   gem 'nokogiri' # https://github.com/sparklemotion/nokogiri
   gem 'pry' # https://github.com/pry/pry

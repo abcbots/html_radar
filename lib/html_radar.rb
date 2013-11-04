@@ -1,30 +1,37 @@
 module HtmlRadar
 
+  require 'action_view'
+
   #def self.show(memory) #=> latest_change
   def self.show(memory)
     x = set_defaults(memory)
     return show_latest(x)
   end
 
-  #def self.refresh(memory, url, css_selector) #=> new_memory
-  def self.refresh(memory, url, css_selector)
-    x = set_defaults(memory, url, css_selector)
-    x = add_new(x)
-    x = add_old(x)
-    x = add_diff(x)
-    x = prepend_diff(x)
-    return x[:obj]
+  #def self.refresh(memory, url, css_selector, top_tag) #=> new_memory
+  def self.refresh(memory, url, css_selector, item_tag, top_tag)
+    x = set_defaults(memory, url, css_selector, item_tag, top_tag)
+    if x[:all_present]
+      x = add_new(x)
+      x = add_old(x)
+      x = add_diff(x)
+      x = prepend_diff(x)
+    end
+    return x[:memory]
   end
 
   def self.show_latest(x)
     return x[:memory].to_s.split(x[:split_tag]).first
   end
 
-  def self.set_defaults(memory, url=nil, css_selector=nil)
+  def self.set_defaults(memory, url=nil, css_selector=nil, item_tag="p", top_tag="_top_")
     x={}
-    x[:css_selector] = css_selector
     x[:memory] = memory 
     x[:url] = url 
+    x[:css_selector] = css_selector
+    x[:item_tag] = item_tag 
+    x[:top_tag] = top_tag 
+    x[:all_present] = (memory.present? and url.present? and css_selector.present? and item_tag.present? and top_tag.present?)
     x[:base_url] = x[:url].to_s.split("/")[0..2].join("/") + "/"
     x[:split_tag] = "<!-- split_tag -->"
     return x
@@ -32,9 +39,9 @@ module HtmlRadar
 
   def self.prepend_diff(x)
     if x[:diff].present?
-      x[:memory] = raw(raw(x[:diff]) + raw(x[:split_tag]) + raw(x[:diff_old]) )
+      x[:memory] = ((x[:diff]) + (x[:split_tag]) + (x[:diff_old]) )
     else
-      x[:memory] = raw(raw(x[:split_tag]) + raw(x[:diff_old]) )
+      x[:memory] = ((x[:split_tag]) + (x[:diff_old]) )
     end
     return x
   end
@@ -48,10 +55,10 @@ module HtmlRadar
     diff_s = ""
     for diff in diff_a
       begin
-        if strip_tags( raw( (new_hsh[diff]) ) ).present?
-          diff_s << "<p>#{new_hsh[diff]}</p>"
+        if Sanitize.clean( ( (new_hsh[diff]) ) ).present?
+          diff_s << "<#{x[:item_tag]}>#{new_hsh[diff]}</#{x[:item_tag]}>"
           diff_s << "<center>#{Time.now.to_s}</center>"
-          diff_s << "<center><a href='#_#{x[:robot].id.to_s}_'>###</a></center>"
+          diff_s << "<center><a href='##{x[:top_tag]}'>###</a></center>"
           diff_s << "<hr />"
         end
       end
@@ -60,9 +67,9 @@ module HtmlRadar
 
     diff_s = ""
     for diff in old_a[0..300]
-      diff_s << "<p>#{new_hsh[diff]}</p>"
+      diff_s << "<#{x[:item_tag]}>#{new_hsh[diff]}</#{x[:item_tag]}>"
       diff_s << "<center>#{Time.now.to_s}</center>"
-      diff_s << "<center><a href='#_#{x[:robot].id.to_s}_'>###</a></center>"
+      diff_s << "<center><a href='##{x[:top_tag]}'>###</a></center>"
       diff_s << "<hr />"
     end
     x[:diff_old] = diff_s
@@ -78,11 +85,11 @@ module HtmlRadar
     for doc in docs.css(css_selector)
       d = 1
       doc_s = doc.to_s
-      a = doc_s.gsub(/[^a-zA-Z]/i,'').to_s
+      a = doc_s.gsub(/[^a-zA-Z]/i,'').to_s.downcase
       aa = a.split('').uniq
       for b in aa
         d += b.ord
-        #d *= a.scan(b).size
+        d *= a.scan(b).size
       end
       doc_id = d.to_s
       unless doc_a.include?(doc_id)
