@@ -77,11 +77,12 @@ module HtmlRadar
     css_selector = css_selector.split(" ").last
     for doc in docs.css(css_selector)
       d = 1
-      a = doc_s.gsub(/[^a-zA-Z]/i,'').split("")
-      aa = doc_s.gsub(/[^a-zA-Z]/i,'').split("").uniq
+      doc_s = doc.to_s
+      a = doc_s.gsub(/[^a-zA-Z]/i,'').to_s
+      aa = a.split('').uniq
       for b in aa
         d += b.ord
-        d *= a.scan(b).size
+        #d *= a.scan(b).size
       end
       doc_id = d.to_s
       unless doc_a.include?(doc_id)

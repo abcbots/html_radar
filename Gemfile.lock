@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    html_radar (0.0.1)
+    html_radar (0.0.2)
       rails (~> 4.0.1)
 
 GEM
@@ -34,12 +34,14 @@ GEM
     arel (4.0.1)
     atomic (1.1.14)
     builder (3.1.4)
+    coderay (1.0.9)
     erubis (2.7.0)
     hike (1.2.3)
     i18n (0.6.5)
     mail (2.5.4)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
+    method_source (0.8.2)
     mime-types (1.25)
     mini_portile (0.5.2)
     minitest (4.7.5)
@@ -48,6 +50,10 @@ GEM
     nokogiri (1.6.0)
       mini_portile (~> 0.5.0)
     polyglot (0.3.3)
+    pry (0.9.12.2)
+      coderay (~> 1.0.5)
+      method_source (~> 0.8)
+      slop (~> 3.4)
     rack (1.5.2)
     rack-test (0.6.2)
       rack (>= 1.0)
@@ -65,6 +71,7 @@ GEM
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
     rake (10.1.0)
+    slop (3.4.6)
     sprockets (2.10.0)
       hike (~> 1.2)
       multi_json (~> 1.0)
@@ -90,3 +97,4 @@ DEPENDENCIES
   html_radar!
   mysql2
   nokogiri
+  pry

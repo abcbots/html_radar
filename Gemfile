@@ -13,5 +13,12 @@ gemspec
 # To use debugger
 # gem 'debugger'
 
-  gem 'mysql2' # https://github.com/brianmario/mysql2
+group :development do
   gem 'nokogiri' # https://github.com/sparklemotion/nokogiri
+  gem 'pry' # https://github.com/pry/pry
+end
+
+group :test do
+  gem 'nokogiri' # https://github.com/sparklemotion/nokogiri
+  gem 'pry' # https://github.com/pry/pry
+end
