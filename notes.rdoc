@@ -1,0 +1,7 @@
+git add --all .
+
+git commit -m 'gem push html_radar-0.0.9.gem'
+
+git push html_radar
+
+gem push html_radar-0.0.9.gem
