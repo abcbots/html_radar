@@ -176,7 +176,7 @@ module HtmlRadar
         if x[:url]=='test.html'
           x[:new_content] = "
           <html><body>
-            <p><a href='http://www.abcbots.com/test'>Static}</a></p>
+            <p><a href='http://www.abcbots.com/test'>Static</a></p>
             <p><a href='http://www.abcbots.com/test'>Dynamic: #{pass=get_random(10)}</a></p>
             <p><a href='http://www.abcbots.com/test'>Dynamic: #{pass}</a></p>
           </body></html>"
