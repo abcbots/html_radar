@@ -2,50 +2,97 @@
 
 == Finds Change in URL Content
 
-Scrapes, Remembers, Outputs Change in URL Content."
+  Scrapes, Remembers, Outputs Change in URL Content."
 
 = Installation
 
-# Gemfile
+  # where: Gemfile
+  gem 'html_radar'
 
-gem 'html_radar'
+= Locally (for test)
+
+  # where: terminal
+  gem install html_radar
 
 = Usage
 
-  == Givens
+  Given the following:
 
-      http://test.html = "
-        <html><body>
-          <p><a href='http://test.html'>Static</a></p>
-          <p><a href='http://test.html'>Dynamic</a></p>
-        </body></html>"
+    http://test.html = "
+      <html><body>
+        <p><a href='http://test.html'>Static</a></p>
+      </body></html>
+      "
+    url = "test.html"
+    css_selector = "a"
+    item_tag = "ul"
+    top_id = "_123_"
 
-      url = "test.html"
-      css_selector = "a"
-      item_tag = "ul"
-      top_id = "_123_"
+    memory = ""
 
-      memory = ""
+  Then html_radar takes a memory...
 
-    === html_radar creates a memory...
+    memory = HtmlRadar.refresh(memory, url, css_selector, item_tag, top_id)
 
-      memory = HtmlRadar.refresh(memory, url, css_selector, item_tag, top_id)
+    memory == "
+        <ul><a href='http://test.html'>Static</a></ul>
+        <center><a href='#_123_'>###</a></center>
+        <hr />
+        <!-- split_tag -->
+      "
 
-    === html_radar remembers memory...
+  Then html_radar shows change as current, because the past does not yet exist...
 
-      remember = HtmlRadar.show(memory).to_s
-      remember.scan("Static").present? #=> TRUE
-      memory.scan("Static").present? #=> TRUE
+    change = HtmlRadar.show(memory).to_s
+    change.scan("Static").present? #=> TRUE
+    memory.scan("Static").present? #=> TRUE
 
-    === html_radar evolves the memory...
+    change == "
+        <ul><a href='http://test.html'>Static</a></ul>
+        <center><a href='#_123_'>###</a></center>
+        <hr />
+      "
 
-      memory = HtmlRadar.refresh(memory, url, css_selector, item_tag, top_id)
+  Then html_radar shows no change, because the past is the same as he present...
 
-    === html_radar compares memories...
+    memory = HtmlRadar.refresh(memory, url, css_selector, item_tag, top_id)
+    change = HtmlRadar.show(memory).to_s
+    change.scan("Static").present? #=> FALSE
+    memory.scan("Static").present? #=> TRUE
 
-      remember = HtmlRadar.show(memory).to_s
-      remember.scan("Static").present? #=> FALSE
-      memory.scan("Static").present? #=> TRUE
+    change == ""
+
+    memory == "
+        <!-- split_tag -->
+        <ul><a href='http://test.html'>Static</a></ul>
+        <center><a href='#_123_'>###</a></center>
+        <hr />
+      "
+
+  Then html_radar shows "Change", because it is added to the new_memory...
+
+    new_memory = "<a href="...">Change</a>"+memory
+    memory = HtmlRadar.refresh(new_memory, url, css_selector, item_tag, top_id)
+    memory_change = HtmlRadar.show(memory).to_s
+    memory_change.scan("Change").present? #=> TRUE
+    memory_change.scan("Static").present? #=> FALSE
+    momory.scan("Static").present? #=> TRUE
+
+    change == "
+        <ul><a href="...">Change</a></ul>
+        <center><a href='#_123_'>###</a></center>
+        <hr />
+      "
+
+    memory == "
+        <ul><a href="...">Change</a></ul>
+        <center><a href='#_123_'>###</a></center>
+        <hr />
+        <!-- split_tag -->
+        <ul><a href='http://test.html'>Static</a></ul>
+        <center><a href='#_123_'>###</a></center>
+        <hr />
+      "
 
 = License
 
