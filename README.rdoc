@@ -1,3 +1,52 @@
 = HtmlRadar
 
-This project rocks and uses MIT-LICENSE.
+== Finds Change in URL Content
+
+Scrapes, Remembers, Outputs Change in URL Content."
+
+= Installation
+
+# Gemfile
+
+gem 'html_radar'
+
+= Usage
+
+  == Givens
+
+      http://test.html = "
+        <html><body>
+          <p><a href='http://test.html'>Static</a></p>
+          <p><a href='http://test.html'>Dynamic</a></p>
+        </body></html>"
+
+      url = "test.html"
+      css_selector = "a"
+      item_tag = "ul"
+      top_id = "_123_"
+
+      memory = ""
+
+    === html_radar creates a memory...
+
+      memory = HtmlRadar.refresh(memory, url, css_selector, item_tag, top_id)
+
+    === html_radar remembers memory...
+
+      remember = HtmlRadar.show(memory).to_s
+      remember.scan("Static").present? #=> TRUE
+      memory.scan("Static").present? #=> TRUE
+
+    === html_radar evolves the memory...
+
+      memory = HtmlRadar.refresh(memory, url, css_selector, item_tag, top_id)
+
+    === html_radar compares memories...
+
+      remember = HtmlRadar.show(memory).to_s
+      remember.scan("Static").present? #=> FALSE
+      memory.scan("Static").present? #=> TRUE
+
+= License
+
+  MIT-LICENSE.

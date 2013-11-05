@@ -11,8 +11,8 @@ Gem::Specification.new do |s|
   s.authors     = ["Dave Makena"]
   s.email       = ["dave@abcbots.com"]
   s.homepage    = "http://www.abcbots.com/robots/2706_html_radar"
-  s.summary     = "Outputs URL Content Change."
-  s.description = "Scrapes, Remembers, Outputs URL Content Change."
+  s.summary     = "Find Change in URL Content"
+  s.description = "Scrapes, Remembers, Outputs Change in URL Content."
 
   s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.rdoc"]
   s.test_files = Dir["test/**/*"]

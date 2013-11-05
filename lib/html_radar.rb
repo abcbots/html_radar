@@ -173,7 +173,7 @@ module HtmlRadar
   def self.add_new_content(x)
     begin
       if x[:url].present?
-        if x[:url]=='test.html'
+        if x[:url]=='http://test.html'
           x[:new_content] = "
           <html><body>
             <p><a href='http://www.abcbots.com/test'>Static</a></p>
