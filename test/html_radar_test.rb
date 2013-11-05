@@ -16,12 +16,21 @@ class HtmlRadarTest < ActiveSupport::TestCase
   end
 
   test "refresh" do
-    memory = "<p><a href='test.html'>Dynamic</a></p><!-- split_tag --><p><a href='test.html'>Static</a></p>"
-    assert_match "Static", HtmlRadar.refresh(memory, "test.html", "a", "ul", "_123_")
-    assert_match "Dynamic", HtmlRadar.refresh(memory, "test.html", "a", "ul", "_123_")
-    assert_match "_123_", HtmlRadar.refresh(memory, "test.html", "a", "ul", "_123_")
-    puts "refresh"
-    puts HtmlRadar.refresh(memory, "test.html", "a", "ul", "_123_")
+    memory = ""
+    memory = HtmlRadar.refresh(memory, "test.html", "a", "ul", "_123_")
+    assert_match "Static", memory
+    assert_match "Dynamic", memory
+    assert_match "<ul>", memory
+    assert_match "#_123_", memory
+    assert_match "Static", HtmlRadar.show(memory)
+    assert_match "Dynamic", HtmlRadar.show(memory)
+    assert_match "<ul>", HtmlRadar.show(memory)
+    assert_match "#_123_", HtmlRadar.show(memory)
+    memory = HtmlRadar.refresh(memory, "test.html", "a", "ul", "_123_")
+    assert_no_match "Static", HtmlRadar.show(memory)
+    assert_match "Dynamic", HtmlRadar.show(memory)
+    assert_match "<ul>", HtmlRadar.show(memory)
+    assert_match "#_123_", HtmlRadar.show(memory)
   end
 
 end

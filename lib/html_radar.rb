@@ -8,10 +8,10 @@ module HtmlRadar
     return show_latest(x)
   end
 
-  #def self.refresh(memory, url, css_selector, top_tag) #=> new_memory
-  def self.refresh(memory, url, css_selector, item_tag, top_tag)
-    x = set_defaults(memory, url, css_selector, item_tag, top_tag)
-    if x[:all_present]
+  #def self.refresh(memory, url, css_selector, top_id) #=> new_memory
+  def self.refresh(memory, url, css_selector, item_tag, top_id)
+    x = set_defaults(memory, url, css_selector, item_tag, top_id)
+    if x[:refresh_ready]
       x = add_new(x)
       x = add_old(x)
       x = add_diff(x)
@@ -24,14 +24,14 @@ module HtmlRadar
     return x[:memory].to_s.split(x[:split_tag]).first
   end
 
-  def self.set_defaults(memory, url=nil, css_selector=nil, item_tag="p", top_tag="_top_")
+  def self.set_defaults(memory, url=nil, css_selector=nil, item_tag="p", top_id="_top_")
     x={}
     x[:memory] = memory 
     x[:url] = url 
     x[:css_selector] = css_selector
     x[:item_tag] = item_tag 
-    x[:top_tag] = top_tag 
-    x[:all_present] = (memory.present? and url.present? and css_selector.present? and item_tag.present? and top_tag.present?)
+    x[:top_id] = top_id 
+    x[:refresh_ready] = (url.present? and css_selector.present? and item_tag.present? and top_id.present?)
     x[:base_url] = x[:url].to_s.split("/")[0..2].join("/") + "/"
     x[:split_tag] = "<!-- split_tag -->"
     return x
@@ -58,7 +58,7 @@ module HtmlRadar
         if Sanitize.clean( ( (new_hsh[diff]) ) ).present?
           diff_s << "<#{x[:item_tag]}>#{new_hsh[diff]}</#{x[:item_tag]}>"
           diff_s << "<center>#{Time.now.to_s}</center>"
-          diff_s << "<center><a href='##{x[:top_tag]}'>###</a></center>"
+          diff_s << "<center><a href='##{x[:top_id]}'>###</a></center>"
           diff_s << "<hr />"
         end
       end
@@ -69,7 +69,7 @@ module HtmlRadar
     for diff in old_a[0..300]
       diff_s << "<#{x[:item_tag]}>#{new_hsh[diff]}</#{x[:item_tag]}>"
       diff_s << "<center>#{Time.now.to_s}</center>"
-      diff_s << "<center><a href='##{x[:top_tag]}'>###</a></center>"
+      diff_s << "<center><a href='##{x[:top_id]}'>###</a></center>"
       diff_s << "<hr />"
     end
     x[:diff_old] = diff_s
